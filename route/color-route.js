@@ -3,15 +3,31 @@
 const jsonParser = require('body-parser').json();
 const colorRouter = (module.exports = new require('express').Router());
 const randomColor = require('randomcolor');
+const hexToHsl = require('hex-to-hsl');
 
 const Color = require('../model/color.js');
 
 colorRouter.post('/api/colors', jsonParser, (req, res, next) => {
   console.log('hit POST /api/colors');
-  new Color({ name: randomColor() })
-    .save()
-    .then(color => res.json(color))
-    .catch(next);
+  for (let i = 0; i < 10000; i++) {
+    let hex = randomColor();
+    let hsl = hexToHsl(hex);
+    console.log(hsl);
+    let hue = hsl[0];
+    console.log(hue);
+    let saturation = hsl[1];
+    let lightness = hsl[2];
+    new Color({
+      name: hex,
+      hsl: hsl,
+      hue: hue,
+      saturation: saturation,
+      lightness: lightness,
+    })
+      .save()
+      .then(color => res.json(color))
+      .catch(next);
+  }
 });
 
 colorRouter.get('/api/colors/:id', (req, res, next) => {
@@ -30,7 +46,7 @@ colorRouter.get('/api/colors', (req, res, next) => {
   pageNumber--;
 
   Color.find({})
-    .sort({ name: 'asc' })
+    .sort({ hue: 'asc' })
     .skip(pageNumber * 12)
     .limit(12)
     .then(colors => res.json(colors))

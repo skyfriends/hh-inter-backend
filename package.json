@@ -21,6 +21,7 @@
     "expect": "^1.20.2",
     "express": "^4.15.3",
     "fs-extra": "^3.0.1",
+    "hex-to-hsl": "^1.0.2",
     "jsonwebtoken": "^7.4.1",
     "mocha": "^3.4.2",
     "mongoose": "^4.10.9",
